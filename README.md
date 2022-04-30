@@ -9,7 +9,7 @@ link for software
 http://www.eterlogic.com/Products.VSPE.html
 
 
-#referece for connection video from youtude 
+#referece for connection video from youtube 
 ----------------------------------------------
 https://www.youtube.com/watch?v=rDcpCTJFBzs
 
