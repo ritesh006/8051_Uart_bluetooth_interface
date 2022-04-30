@@ -1,0 +1,6 @@
+".\Objects\main_bluetooth.obj",
+".\Objects\delay.obj",
+".\Objects\lcd.obj",
+".\Objects\UART_driver.obj" 
+TO ".\Objects\Uart_bluetooth" 
+PRINT(".\Listings\Uart_bluetooth.m51")

@@ -1,0 +1,118 @@
+C51 COMPILER V9.60.0.0   UART_DRIVER                                                       04/30/2022 19:12:53 PAGE 1   
+
+
+C51 COMPILER V9.60.0.0, COMPILATION OF MODULE UART_DRIVER
+OBJECT MODULE PLACED IN .\Objects\UART_driver.obj
+COMPILER INVOKED BY: C:\Keil_v5\C51\BIN\C51.EXE UART_driver.c OPTIMIZE(8,SPEED) BROWSE DEBUG OBJECTEXTEND PRINT(.\Listin
+                    -gs\UART_driver.lst) TABS(2) OBJECT(.\Objects\UART_driver.obj)
+
+line level    source
+
+   1          /* UART_driver.c */
+   2          
+   3          #include <reg51.h>
+   4          #include "header.h"
+   5          
+   6          void uart_init(unsigned int baudrate)
+   7          {
+   8   1        /* UART initilization */
+   9   1        SCON = 0X50;
+  10   1        TMOD |= 0X20;
+  11   1        TH1 = 253;     /* for baudrate of 9600 */
+  12   1        TR1 = 1;       /* start baudrate settting */
+  13   1        
+  14   1        switch(baudrate)
+  15   1        {
+  16   2          case 7200 : TH1 = 252;
+  17   2                      break;
+  18   2          
+  19   2          case 9600 : TH1 = 253;
+  20   2                      break;
+  21   2          
+  22   2          case 14400: TH1 = 254;
+  23   2                      break;
+  24   2          
+  25   2          case 28800: TH1 = 255;
+  26   2                      break;
+  27   2          
+  28   2          case 57600: TH1 = 252;
+  29   2                      PCON = (1 << 8 );
+  30   2                      break;
+  31   2          
+  32   2        }
+  33   1        
+  34   1        TR1 = 1; /* start baudrate setting */ 
+  35   1      }
+  36          
+  37          
+  38          void uart_tx (unsigned char send_data)
+  39          {
+  40   1      
+  41   1        SBUF = send_data;
+  42   1        while (TI == 0);    /* waiting for data transfer */
+  43   1        //lcd_data(SBUF);
+  44   1        TI = 0 ;            /* set TI bit to 0 */
+  45   1        
+  46   1      }
+  47          
+  48          unsigned char uart_rx(void)
+  49          {
+  50   1        
+  51   1        while( RI == 0);  /* waiting for data receve */
+  52   1        RI = 0;
+  53   1        
+  54   1        return SBUF;
+C51 COMPILER V9.60.0.0   UART_DRIVER                                                       04/30/2022 19:12:53 PAGE 2   
+
+  55   1      }
+  56          
+  57          void uart_tx_string(char *ptr)
+  58          {
+  59   1        while(*ptr != 0)
+  60   1        {
+  61   2          SBUF = *ptr;
+  62   2          while (TI == 0);    /* waiting for data transfer */
+  63   2          TI = 0 ;            /* set TI bit to 0 */
+  64   2          ptr++; 
+  65   2        }
+  66   1          
+  67   1      }
+  68          
+  69          void uart_rx_string(char *buf , unsigned char max_length)
+  70          {
+  71   1        unsigned char i;    
+  72   1        
+  73   1        for( i = 0; i < max_length; i++)
+  74   1        {
+  75   2          while(RI == 0);     /* waiting for data receive */
+  76   2          RI = 0;
+  77   2          buf[i] = SBUF;      /* put SBUF data to buf of i */
+  78   2          
+  79   2          if(buf[i] == '\r') /* if enter key is press */
+  80   2          {
+  81   3            break;           /* break the loop */
+  82   3          }
+  83   2          
+  84   2        }
+  85   1        
+  86   1        buf[i] = 0;          /* add null to the end of the string */
+  87   1        
+  88   1      }
+  89          
+  90          
+  91          
+  92          
+
+
+MODULE INFORMATION:   STATIC OVERLAYABLE
+   CODE SIZE        =    178    ----
+   CONSTANT SIZE    =   ----    ----
+   XDATA SIZE       =   ----    ----
+   PDATA SIZE       =   ----    ----
+   DATA SIZE        =   ----       3
+   IDATA SIZE       =   ----    ----
+   BIT SIZE         =   ----    ----
+END OF MODULE INFORMATION.
+
+
+C51 COMPILATION COMPLETE.  0 WARNING(S),  0 ERROR(S)
